@@ -1,0 +1,59 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+import java.util.stream.Collectors;
+
+public class MoviePaginationApp {
+
+    public static void main(String[] args) {
+        List<Movie> movies = new ArrayList<>();
+        movies.add(new Movie("Inception", "Christopher Nolan", 2010));
+        movies.add(new Movie("The Matrix", "The Wachowskis", 1999));
+        movies.add(new Movie("Interstellar", "Christopher Nolan", 2014));
+        movies.add(new Movie("The Shawshank Redemption", "Frank Darabont", 1994));
+        movies.add(new Movie("The Godfather", "Francis Ford Coppola", 1972));
+        // Add more movies as needed
+
+        Scanner scanner = new Scanner(System.in);
+        int pageSize = 2;  // Number of movies per page
+        int currentPage = 1;
+
+        while (true) {
+            displayPage(movies, currentPage, pageSize);
+            System.out.println("Enter 'n' for next page, 'p' for previous page, 'q' to quit:");
+            String input = scanner.nextLine();
+
+            if ("n".equalsIgnoreCase(input)) {
+                if ((currentPage * pageSize) < movies.size()) {
+                    currentPage++;
+                } else {
+                    System.out.println("This is the last page.");
+                }
+            } else if ("p".equalsIgnoreCase(input)) {
+                if (currentPage > 1) {
+                    currentPage--;
+                } else {
+                    System.out.println("This is the first page.");
+                }
+            } else if ("q".equalsIgnoreCase(input)) {
+                break;
+            } else {
+                System.out.println("Invalid input, please try again.");
+            }
+        }
+
+        scanner.close();
+    }
+
+    private static void displayPage(List<Movie> movies, int currentPage, int pageSize) {
+        int start = (currentPage - 1) * pageSize;
+        List<Movie> page = movies.stream()
+                                 .skip(start)
+                                 .limit(pageSize)
+                                 .collect(Collectors.toList());
+
+        System.out.println("Page " + currentPage);
+        page.forEach(System.out::println);
+        System.out.println();
+    }
+}
